@@ -11,7 +11,7 @@
     var head, script;
     head = document.getElementsByTagName('head')[0];
     script = document.createElement('script');
-    script.src = '/example.jsonp?callback=Island.renderPositions';
+    script.src = 'example.jsonp?callback=Island.renderPositions';
     head.appendChild(script);
   };
 
