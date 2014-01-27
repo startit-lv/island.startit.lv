@@ -19,57 +19,57 @@ imgData = new Array();
 displayObjects = new Array();
 //Initializing all of the display objects.(Will have to export to JSON later.)
 imgData[0] = {
-  source:"map.png",
+  source:"artwork/map.png",
   x:300,
   y:0
 };
 imgData[1] = {
-  source:"snake.png",
+  source:"artwork/snake.png",
   x:400,
   y:75
 };
 imgData[2] = {
-  source:"snake.png",
+  source:"artwork/snake.png",
   x:400,
   y:375
 };
 imgData[3] = {
-  source:"snake.png",
+  source:"artwork/snake.png",
   x:900,
   y:40
 };
 imgData[4] = {
-  source:"snake.png",
+  source:"artwork/snake.png",
   x:700,
   y:275
 };
 imgData[5] = {
-  source:"up.png",
+  source:"artwork/up.png",
   x:100,
   y:0
 };
 imgData[6] = {
-  source:"down.png",
+  source:"artwork/down.png",
   x:100,
   y:80
 };
 imgData[7] = {
-  source:"left.png",
+  source:"artwork/left.png",
   x:60,
   y:40
 };
 imgData[8] = {
-  source:"right.png",
+  source:"artwork/right.png",
   x:140,
   y:40
 };
 imgData[9] = {
-  source:"plus.png",
+  source:"artwork/plus.png",
   x:10,
   y:20
 };
 imgData[10] = {
-  source:"minus.png",
+  source:"artwork/minus.png",
   x:10,
   y:75
 };
