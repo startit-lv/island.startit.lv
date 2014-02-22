@@ -7,74 +7,31 @@ var zoomable;
 var zoomscale;
 var tempX;
 var tempY;
-imported = document.createElement('script');
-imported.src = 'javascripts/ocanvas-2.5.1.js';
-document.head.appendChild(imported);
-zoomlevel = 0;
-zoomscale = 1.5;
-zoomable = true;
-tempX = new Array();
-tempY = new Array();
-imgData = new Array();
-displayObjects = new Array();
-//Initializing all of the display objects.(Will have to export to JSON later.)
-imgData[0] = {
-  source:"artwork/map.png",
-  x:300,
-  y:0
-};
-imgData[1] = {
-  source:"artwork/snake.png",
-  x:400,
-  y:75
-};
-imgData[2] = {
-  source:"artwork/snake.png",
-  x:400,
-  y:375
-};
-imgData[3] = {
-  source:"artwork/snake.png",
-  x:900,
-  y:40
-};
-imgData[4] = {
-  source:"artwork/snake.png",
-  x:700,
-  y:275
-};
-imgData[5] = {
-  source:"artwork/up.png",
-  x:100,
-  y:0
-};
-imgData[6] = {
-  source:"artwork/down.png",
-  x:100,
-  y:80
-};
-imgData[7] = {
-  source:"artwork/left.png",
-  x:60,
-  y:40
-};
-imgData[8] = {
-  source:"artwork/right.png",
-  x:140,
-  y:40
-};
-imgData[9] = {
-  source:"artwork/plus.png",
-  x:10,
-  y:20
-};
-imgData[10] = {
-  source:"artwork/minus.png",
-  x:10,
-  y:75
-};
+var objData;
+var objNum;
 
-imported.onload = function (){
+function ini(data){  
+  //Need data parsin' here
+  zoomlevel = 0;
+  zoomscale = 1.5;
+  zoomable = true;
+  tempX = new Array();
+  tempY = new Array();
+  imgData = new Array();
+  displayObjects = new Array();
+  objData = document.createElement('script');
+  objData.src = 'javascripts/displayObjects.jsonp?callback=loadObjData';
+  document.head.appendChild(objData);
+}
+//Initializing all of the display objects.
+function loadObjData(data){
+  objNum = data.count;
+  for(var i=0;i<objNum;i++){
+    imgData[i] = data.objects[i];
+  }
+  buildMap();
+}
+function buildMap (){
   var JScanvas;
   //Creating oCanvas main object
   canvas = oCanvas.create({

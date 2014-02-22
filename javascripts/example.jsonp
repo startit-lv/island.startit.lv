@@ -1,0 +1,11 @@
+Island.renderPositions({
+  positions: {
+    1: { count: 2, users: [{ full_name: "B1"}, { full_name: "B2" }] },
+    2: { count: 0,   users: [] },
+    3: { count: 1,   users: [{ full_name: "A1", current: true }], current: true },
+    4: { count: 1,   users: [{ full_name: "C"}]}
+  },
+  current_user: {
+    full_name: "Me"
+  }
+});
