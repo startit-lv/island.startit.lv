@@ -9,9 +9,14 @@ var tempX;
 var tempY;
 var objData;
 var objNum;
+var playaPos;
+var posData;
+var usrX;
+var usrY;
 
 function ini(data){  
   //Need data parsin' here
+  posData = data;
   zoomlevel = 0;
   zoomscale = 1.5;
   zoomable = true;
@@ -29,6 +34,14 @@ function loadObjData(data){
   for(var i=0;i<objNum;i++){
     imgData[i] = data.objects[i];
   }
+  //depends on the way we receive data, will have to ask
+  //for(var i=1;i<objNum-7;i++){
+    //if(posData.positions[i].current == true){
+      playaPos = posData.current_user.pos;
+      usrX = posData.positions[playaPos].x;
+      usrY = posData.positions[playaPos].y;
+   // }
+ // }
   buildMap();
 }
 function buildMap (){
@@ -38,7 +51,7 @@ function buildMap (){
     canvas: "#canvas"
   });
   //Creating and displaying all objects on canvas: maps, buttons etc.
-  for(var i=0;i<11;i++){
+  for(var i=0;i<objNum;i++){
     displayObjects[i] = canvas.display.image({
       x: imgData[i].x,
       y: imgData[i].y,
@@ -51,31 +64,32 @@ function buildMap (){
   JScanvas = document.getElementById("canvas");
   JScanvas.addEventListener("mousewheel", zoom, false);  
   JScanvas.addEventListener("DOMMouseScroll", zoom, false);
-  displayObjects[5].bind("click tap", function(){
+  //last six objects are always map buttons
+  displayObjects[objNum-7].move(usrX,usrY);
+  displayObjects[objNum-6].bind("click tap", function(){
     pan(1);
   });
-  displayObjects[6].bind("click tap", function(){
+  displayObjects[objNum-5].bind("click tap", function(){
     pan(2);
   });
-  displayObjects[7].bind("click tap", function(){
+  displayObjects[objNum-4].bind("click tap", function(){
     pan(3);
   });
-  displayObjects[8].bind("click tap", function(){
+  displayObjects[objNum-3].bind("click tap", function(){
     pan(4);
   });
-  displayObjects[9].bind("click tap", function(){
+  displayObjects[objNum-2].bind("click tap", function(){
     zoombutton(1);
   });
-  displayObjects[10].bind("click tap", function(){
+  displayObjects[objNum-1].bind("click tap", function(){
     zoombutton(-1);
   });
-  
   //Moving the map with mouse
-  for(var k=0;k<5;k++)
+  for(var k=0;k<objNum-6;k++)
   {
     displayObjects[k].bind("mousedown", function () {
       zoomable = false;  
-	  for(var l=0;l<5;l++)
+	  for(var l=0;l<objNum-6;l++)
 	  {
         tempX[l] = canvas.mouse.x - displayObjects[l].x;          
         tempY[l] = canvas.mouse.y - displayObjects[l].y;
@@ -84,7 +98,7 @@ function buildMap (){
     });
     displayObjects[k].bind("mousemove", function () {           
       if(canvas.mouse.buttonState == "down") {
-	    for(var l=0;l<5;l++)
+	    for(var l=0;l<objNum-6;l++)
 	    {
           displayObjects[l].x = canvas.mouse.x - tempX[l];
           displayObjects[l].y = canvas.mouse.y - tempY[l];
@@ -106,7 +120,7 @@ function zoombutton(zoom){
     //Zooming in with button
     if((zoom == 1) && (zoomlevel<4) && (zoomable == true)){
       zoomable = false;
-	  for(var j=0;j<5;j++){
+	  for(var j=0;j<objNum-6;j++){
 	    displayObjects[j].stop().animate(
 		{
           height: displayObjects[j].height*zoomscale,
@@ -127,7 +141,7 @@ function zoombutton(zoom){
      //Zooming out with button
      else if((zoom == -1) && (zoomlevel>-1) && (zoomable == true)){
        zoomable = false;
-	  for(var j=0;j<5;j++){
+	  for(var j=0;j<objNum-6;j++){
 	    displayObjects[j].stop().animate(
 		{
           height: Math.round(displayObjects[j].height/zoomscale),
@@ -151,7 +165,7 @@ function zoombutton(zoom){
 function pan(direction){
   if(direction == 1){
     zoomable = false;
-	for(var j=0;j<5;j++){
+	for(var j=0;j<objNum-6;j++){
 	  displayObjects[j].stop().animate({
       y: displayObjects[j].y + 100},
       { 
@@ -165,7 +179,7 @@ function pan(direction){
   }
   else if(direction == 2){
     zoomable = false;
-	for(var j=0;j<5;j++){
+	for(var j=0;j<objNum-6;j++){
 	  displayObjects[j].stop().animate({
       y: displayObjects[j].y - 100},
       { 
@@ -179,7 +193,7 @@ function pan(direction){
   }
   else if(direction == 3){
     zoomable = false;
-	for(var j=0;j<5;j++){
+	for(var j=0;j<objNum-6;j++){
 	  displayObjects[j].stop().animate({
       x: displayObjects[j].x + 100},
       { 
@@ -193,7 +207,7 @@ function pan(direction){
   }
   else if(direction == 4){
     zoomable = false;
-	for(var j=0;j<5;j++){
+	for(var j=0;j<objNum-6;j++){
 	  displayObjects[j].stop().animate({
       x: displayObjects[j].x - 100},
       { 
@@ -217,7 +231,7 @@ function zoom(e) {
     //Zooming in
     if((delta == 1) && (zoomlevel<4) && (zoomable == true)){
       zoomable = false;
-	  for(var j=0;j<5;j++){
+	  for(var j=0;j<objNum-6;j++){
 	    displayObjects[j].stop().animate(
 		{
           height: displayObjects[j].height*zoomscale,
@@ -238,7 +252,7 @@ function zoom(e) {
      //Zooming out
      else if((delta == -1) && (zoomlevel>-1) && (zoomable == true)){
        zoomable = false;
-       for(var j=0;j<5;j++){
+       for(var j=0;j<objNum-6;j++){
 	     displayObjects[j].stop().animate(
 		 {
            height: Math.round(displayObjects[j].height/zoomscale),

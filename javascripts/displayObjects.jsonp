@@ -1,15 +1,17 @@
 loadObjData({
-count:11,objects:[
+count:12,objects:[
 {source:"artwork/map.png",x:300,y:0},
 {source:"artwork/snake.png",x:400,y:75},
 {source:"artwork/snake.png",x:400,y:375},
 {source:"artwork/snake.png",x:900,y:40},
 {source:"artwork/snake.png",x:700,y:75},
+//add new positions above this text
+{source:"artwork/playa.png",x:0,y:0},
 {source:"artwork/up.png",x:100,y:0},
 {source:"artwork/down.png",x:100,y:80},
 {source:"artwork/left.png",x:60,y:40},
 {source:"artwork/right.png",x:140,y:40},
 {source:"artwork/plus.png",x:20,y:10},
-{source:"artwork/minus.png",x:10,y:75},
+{source:"artwork/minus.png",x:10,y:75}
 ]
 });
