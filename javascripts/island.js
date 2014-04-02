@@ -14,6 +14,25 @@ var posData;
 var usrX;
 var usrY;
 
+Island.infi = function(data) {
+
+}
+
+Island = {
+  imported;
+  displayObjects: 
+  imgData:
+
+  init: function(data) {...}
+  
+  controls: {
+    zoomin: function(...) {
+
+    }
+    zoomout...
+  }
+}
+
 function ini(data){  
   //Need data parsin' here
   posData = data;
@@ -28,15 +47,16 @@ function ini(data){
   objData.src = 'javascripts/displayObjects.jsonp?callback=loadObjData';
   document.head.appendChild(objData);
 }
-//Initializing all of the display objects.
+
+// Initializing all of the display objects.
 function loadObjData(data){
   objNum = data.count;
   for(var i=0;i<objNum;i++){
     imgData[i] = data.objects[i];
   }
   //depends on the way we receive data, will have to ask
-  //for(var i=1;i<objNum-7;i++){
-    //if(posData.positions[i].current == true){
+  // for(var i=1;i<objNum-7;i++){
+    // if(posData.positions[i].current == true){
       playaPos = posData.current_user.pos;
       usrX = posData.positions[playaPos].x;
       usrY = posData.positions[playaPos].y;
@@ -44,6 +64,7 @@ function loadObjData(data){
  // }
   buildMap();
 }
+
 function buildMap (){
   var JScanvas;
   //Creating oCanvas main object
@@ -110,62 +131,59 @@ function buildMap (){
       zoomable = true;  
     });
   }
-
-
-  
 }
 
 //Zooming with the + and - buttons.
 function zoombutton(zoom){
-    //Zooming in with button
-    if((zoom == 1) && (zoomlevel<4) && (zoomable == true)){
-      zoomable = false;
-	  for(var j=0;j<objNum-6;j++){
-	    displayObjects[j].stop().animate(
-		{
-          height: displayObjects[j].height*zoomscale,
-          width: displayObjects[j].width*zoomscale,
-          x: canvas.width/2-zoomscale*(canvas.width/2-displayObjects[j].x),
-          y: canvas.height/2-zoomscale*(canvas.height/2-displayObjects[j].y)
-		},
-        { 
-          duration: 200,
-	      callback: function(){
-            zoomable = true;
-            }
+  //Zooming in with button
+  if((zoom == 1) && (zoomlevel<4) && (zoomable == true)) {
+    zoomable = false;
+
+    for(var j=0;j<objNum-6;j++){
+      displayObjects[j].stop().animate({
+        height: displayObjects[j].height*zoomscale,
+        width: displayObjects[j].width*zoomscale,
+        x: canvas.width/2-zoomscale*(canvas.width/2-displayObjects[j].x),
+        y: canvas.height/2-zoomscale*(canvas.height/2-displayObjects[j].y)
+      }, { 
+        duration: 200,
+        callback: function(){
+          zoomable = true;
         }
-        );
-	  }
-      zoomlevel++;
-     } 
-     //Zooming out with button
-     else if((zoom == -1) && (zoomlevel>-1) && (zoomable == true)){
-       zoomable = false;
-	  for(var j=0;j<objNum-6;j++){
-	    displayObjects[j].stop().animate(
-		{
-          height: Math.round(displayObjects[j].height/zoomscale),
-           width: Math.round(displayObjects[j].width/zoomscale),
-           x: canvas.width/2-(canvas.width/2-displayObjects[j].x)/zoomscale,
-           y: canvas.height/2-(canvas.height/2-displayObjects[j].y)/zoomscale
-		},
-        { 
-          duration: 200,
-	      callback: function(){
-            zoomable = true;
-            }
-        }
-        );
-	  }
-       zoomlevel--;
-     }
+      });
+    }
+
+    zoomlevel++;
+   }
+
+   //Zooming out with button
+   else if((zoom == -1) && (zoomlevel>-1) && (zoomable == true)){
+     zoomable = false;
+  for(var j=0;j<objNum-6;j++){
+    displayObjects[j].stop().animate(
+	{
+        height: Math.round(displayObjects[j].height/zoomscale),
+         width: Math.round(displayObjects[j].width/zoomscale),
+         x: canvas.width/2-(canvas.width/2-displayObjects[j].x)/zoomscale,
+         y: canvas.height/2-(canvas.height/2-displayObjects[j].y)/zoomscale
+	},
+      { 
+        duration: 200,
+      callback: function(){
+          zoomable = true;
+          }
+      }
+      );
+  }
+     zoomlevel--;
+   }
 }
 
 //Panning the map with directional buttons on screen.
 function pan(direction){
   if(direction == 1){
     zoomable = false;
-	for(var j=0;j<objNum-6;j++){
+	 for(var j=0;j<objNum-6;j++){
 	  displayObjects[j].stop().animate({
       y: displayObjects[j].y + 100},
       { 

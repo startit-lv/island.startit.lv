@@ -1,9 +1,9 @@
 Island.renderPositions({
   positions: [
-    { count: 2, users: [{ full_name: "B1"}, { full_name: "B2" }],x:400,y:75},
-    { count: 0,   users: [],x:400,y:375 },
-    { count: 1,   users: [{ full_name: "A1", current:true}] ,x:900,y:40},
-    { count: 1,   users: [{ full_name: "C"}],x:700,y:75}
+    { island_position_id: 1, count: 2 },
+    { island_position_id: 2, count: 0 },
+    { island_position_id: 3, count: 1 },
+    { island_position_id: 4, count: 1 }
   ],
   current_user: {
     full_name: "Me", pos: 0
