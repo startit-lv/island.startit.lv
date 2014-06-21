@@ -5,11 +5,13 @@
     <link rel="stylesheet" type="text/css" href="island.css">
   </head>
   <body>
-
-    <div id="map-controls" style="position: absolute; top: 10;  ...."></div>
-
-    <canvas id="island_canvas" width="1377" height="768"></canvas>
-
+    <canvas id="island_canvas" width=1377 height=768></canvas>
     <script src="javascripts/main.js"></script>
+      <img src="artwork/up.png" id="up" onClick="Island.pan(1)"></img>
+      <img src="artwork/down.png" id="down" onClick="Island.pan(2)"></img>
+      <img src="artwork/left.png" id="left" onClick="Island.pan(3)"></img>
+      <img src="artwork/right.png" id="right" onClick="Island.pan(4)"></img>
+      <img src="artwork/plus.png" id="plus" onClick="Island.zoombutton(1)"></img>
+      <img src="artwork/minus.png" id="minus" onClick="Island.zoombutton(-1)"></img>
   </body>
 </html>

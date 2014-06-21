@@ -6,6 +6,6 @@ Island.renderPositions({
     { island_position_id: 4, count: 1 }
   ],
   current_user: {
-    full_name: "Me", pos: 0
+    full_name: "Me", pos: 1
   }
 });

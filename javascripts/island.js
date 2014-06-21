@@ -1,291 +1,276 @@
-var imported;
-var displayObjects;
-var imgData;
-var canvas;
-var zoomlevel;
-var zoomable;
-var zoomscale;
-var tempX;
-var tempY;
-var objData;
-var objNum;
-var playaPos;
-var posData;
-var usrX;
-var usrY;
-
-Island.infi = function(data) {
-
-}
-
 Island = {
-  imported;
-  displayObjects: 
-  imgData:
-
-  init: function(data) {...}
+  displayObjects: new Array(),
+  imgData: new Array(),
+  canvas: new Object,
+  zoomlevel: 0,
+  zoomable: true,
+  zoomscale: 1.5,
+  tempX: new Array(),
+  tempY: new Array(),
+  objData: new Object,
+  objNum: 0,
+  playaPos: 0,
+  posData: new Object,
+  usrX: 0,
+  usrY: 0,
   
-  controls: {
-    zoomin: function(...) {
-
+  
+  ini: function(data){
+    //Need data parsin' here
+    Island.posData = data;
+    Island.objData = document.createElement('script');
+    Island.objData.src = 'javascripts/displayObjects.jsonp?callback=loadObjData';
+    document.head.appendChild(Island.objData);
+  },
+  
+  
+  // Initializing all of the display objects.
+  loadObjData: function(data){
+    Island.objNum = data.count;
+    for(var i=0;i<Island.objNum;i++){
+      Island.imgData[i] = data.objects[i];
     }
-    zoomout...
-  }
-}
-
-function ini(data){  
-  //Need data parsin' here
-  posData = data;
-  zoomlevel = 0;
-  zoomscale = 1.5;
-  zoomable = true;
-  tempX = new Array();
-  tempY = new Array();
-  imgData = new Array();
-  displayObjects = new Array();
-  objData = document.createElement('script');
-  objData.src = 'javascripts/displayObjects.jsonp?callback=loadObjData';
-  document.head.appendChild(objData);
-}
-
-// Initializing all of the display objects.
-function loadObjData(data){
-  objNum = data.count;
-  for(var i=0;i<objNum;i++){
-    imgData[i] = data.objects[i];
-  }
-  //depends on the way we receive data, will have to ask
-  // for(var i=1;i<objNum-7;i++){
-    // if(posData.positions[i].current == true){
-      playaPos = posData.current_user.pos;
-      usrX = posData.positions[playaPos].x;
-      usrY = posData.positions[playaPos].y;
-   // }
- // }
-  buildMap();
-}
-
-function buildMap (){
-  var JScanvas;
-  //Creating oCanvas main object
-  canvas = oCanvas.create({
-    canvas: "#canvas"
-  });
-  //Creating and displaying all objects on canvas: maps, buttons etc.
-  for(var i=0;i<objNum;i++){
-    displayObjects[i] = canvas.display.image({
-      x: imgData[i].x,
-      y: imgData[i].y,
+    Island.playaPos = Island.posData.current_user.pos;
+    Island.usrX = data.objects[Island.playaPos].x;
+    Island.usrY = data.objects[Island.playaPos].y;
+    Island.buildMap();
+  },
+  
+  
+  buildMap: function(){
+    var JScanvas;
+    //Creating oCanvas main object
+    Island.canvas = oCanvas.create({
+      canvas: "#island_canvas"
+    });
+    //Creating and displaying all objects on canvas: maps, buttons etc.
+    for(var i=0;i<Island.objNum;i++){
+      Island.displayObjects[i] = Island.canvas.display.image({
+        x: Island.imgData[i].x,
+        y: Island.imgData[i].y,
+        origin: { x: "left", y: "top" },
+        image: Island.imgData[i].source
+      });
+      Island.canvas.addChild(Island.displayObjects[i]);
+    }     
+    Island.displayObjects[Island.objNum] = Island.canvas.display.image({
+      x: Island.usrX,
+      y: Island.usrY,
       origin: { x: "left", y: "top" },
-      image: imgData[i].source
+      image: "artwork/playa.png"
     });
-    canvas.addChild(displayObjects[i]);
-  }     
-  //Setting different events.
-  JScanvas = document.getElementById("canvas");
-  JScanvas.addEventListener("mousewheel", zoom, false);  
-  JScanvas.addEventListener("DOMMouseScroll", zoom, false);
-  //last six objects are always map buttons
-  displayObjects[objNum-7].move(usrX,usrY);
-  displayObjects[objNum-6].bind("click tap", function(){
-    pan(1);
-  });
-  displayObjects[objNum-5].bind("click tap", function(){
-    pan(2);
-  });
-  displayObjects[objNum-4].bind("click tap", function(){
-    pan(3);
-  });
-  displayObjects[objNum-3].bind("click tap", function(){
-    pan(4);
-  });
-  displayObjects[objNum-2].bind("click tap", function(){
-    zoombutton(1);
-  });
-  displayObjects[objNum-1].bind("click tap", function(){
-    zoombutton(-1);
-  });
-  //Moving the map with mouse
-  for(var k=0;k<objNum-6;k++)
-  {
-    displayObjects[k].bind("mousedown", function () {
-      zoomable = false;  
-	  for(var l=0;l<objNum-6;l++)
-	  {
-        tempX[l] = canvas.mouse.x - displayObjects[l].x;          
-        tempY[l] = canvas.mouse.y - displayObjects[l].y;
-      }
-	  canvas.draw.redraw();
+    Island.canvas.addChild(Island.displayObjects[Island.objNum]);
+    //Setting different events.
+    JScanvas = document.getElementById("island_canvas");
+    JScanvas.addEventListener("mousewheel", Island.zoom, false);  
+    JScanvas.addEventListener("DOMMouseScroll", Island.zoom, false);
+    //last six objects are always map buttons
+    /*Island.displayObjects[Island.objNum-6].bind("click tap", function(){
+      Island.pan(1);
     });
-    displayObjects[k].bind("mousemove", function () {           
-      if(canvas.mouse.buttonState == "down") {
-	    for(var l=0;l<objNum-6;l++)
-	    {
-          displayObjects[l].x = canvas.mouse.x - tempX[l];
-          displayObjects[l].y = canvas.mouse.y - tempY[l];
-	    }
-	    canvas.draw.redraw();
-      }
+    Island.displayObjects[Island.objNum-5].bind("click tap", function(){
+      Island.pan(2);
     });
-    displayObjects[k].bind("mouseup", function () {
-      zoomable = true;  
+    Island.displayObjects[Island.objNum-4].bind("click tap", function(){
+      Island.pan(3);
     });
-  }
-}
-
-//Zooming with the + and - buttons.
-function zoombutton(zoom){
-  //Zooming in with button
-  if((zoom == 1) && (zoomlevel<4) && (zoomable == true)) {
-    zoomable = false;
-
-    for(var j=0;j<objNum-6;j++){
-      displayObjects[j].stop().animate({
-        height: displayObjects[j].height*zoomscale,
-        width: displayObjects[j].width*zoomscale,
-        x: canvas.width/2-zoomscale*(canvas.width/2-displayObjects[j].x),
-        y: canvas.height/2-zoomscale*(canvas.height/2-displayObjects[j].y)
-      }, { 
-        duration: 200,
-        callback: function(){
-          zoomable = true;
+    Island.displayObjects[Island.objNum-3].bind("click tap", function(){
+      Island.pan(4);
+    });
+    Island.displayObjects[Island.objNum-2].bind("click tap", function(){
+      Island.zoombutton(1);
+    });
+    Island.displayObjects[Island.objNum-1].bind("click tap", function(){
+      Island.zoombutton(-1);
+    });*/
+    
+    //Moving the map with mouse
+    for(var k=0;k<=Island.objNum;k++)
+    {
+      Island.displayObjects[k].bind("mousedown", function () {
+        Island.zoomable = false;  
+        for(var l=0;l<=Island.objNum;l++)
+        {
+          Island.tempX[l] = Island.canvas.mouse.x - Island.displayObjects[l].x;          
+          Island.tempY[l] = Island.canvas.mouse.y - Island.displayObjects[l].y;
+        }
+        Island.canvas.draw.redraw();
+      });
+      
+      Island.displayObjects[k].bind("mousemove", function () {           
+        if(Island.canvas.mouse.buttonState == "down") {
+          for(var l=0;l<=Island.objNum;l++)
+          {
+            Island.displayObjects[l].x = Island.canvas.mouse.x - Island.tempX[l];
+            Island.displayObjects[l].y = Island.canvas.mouse.y - Island.tempY[l];
+          }
+          Island.canvas.draw.redraw();
         }
       });
+      
+      Island.displayObjects[k].bind("mouseup", function () {
+        Island.zoomable = true;  
+      });
+    }
+  },
+  
+  
+  zoombutton: function(zoom){
+    //Zooming in with button
+    if((zoom == 1) && (Island.zoomlevel<4) && (Island.zoomable == true)) {
+      Island.zoomable = false;
+
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate({
+          height: Island.displayObjects[j].height*Island.zoomscale,
+          width: Island.displayObjects[j].width*Island.zoomscale,
+          x: Island.canvas.width/2-Island.zoomscale*(Island.canvas.width/2-Island.displayObjects[j].x),
+          y: Island.canvas.height/2-Island.zoomscale*(Island.canvas.height/2-Island.displayObjects[j].y)
+        }, { 
+          duration: 200,
+          callback: function(){
+            Island.zoomable = true;
+          }
+        });
+      }
+      Island.zoomlevel++;
     }
 
-    zoomlevel++;
-   }
-
-   //Zooming out with button
-   else if((zoom == -1) && (zoomlevel>-1) && (zoomable == true)){
-     zoomable = false;
-  for(var j=0;j<objNum-6;j++){
-    displayObjects[j].stop().animate(
-	{
-        height: Math.round(displayObjects[j].height/zoomscale),
-         width: Math.round(displayObjects[j].width/zoomscale),
-         x: canvas.width/2-(canvas.width/2-displayObjects[j].x)/zoomscale,
-         y: canvas.height/2-(canvas.height/2-displayObjects[j].y)/zoomscale
-	},
-      { 
-        duration: 200,
-      callback: function(){
-          zoomable = true;
-          }
-      }
-      );
-  }
-     zoomlevel--;
-   }
-}
-
-//Panning the map with directional buttons on screen.
-function pan(direction){
-  if(direction == 1){
-    zoomable = false;
-	 for(var j=0;j<objNum-6;j++){
-	  displayObjects[j].stop().animate({
-      y: displayObjects[j].y + 100},
-      { 
-        duration: 180,
-	    callback: function(){
-          zoomable = true;
-          }
-      }
-      );
-	}
-  }
-  else if(direction == 2){
-    zoomable = false;
-	for(var j=0;j<objNum-6;j++){
-	  displayObjects[j].stop().animate({
-      y: displayObjects[j].y - 100},
-      { 
-        duration: 180,
-	    callback: function(){
-          zoomable = true;
-          }
-      }
-      );
-	}
-  }
-  else if(direction == 3){
-    zoomable = false;
-	for(var j=0;j<objNum-6;j++){
-	  displayObjects[j].stop().animate({
-      x: displayObjects[j].x + 100},
-      { 
-        duration: 180,
-	    callback: function(){
-          zoomable = true;
-          }
-      }
-      );
-	}
-  }
-  else if(direction == 4){
-    zoomable = false;
-	for(var j=0;j<objNum-6;j++){
-	  displayObjects[j].stop().animate({
-      x: displayObjects[j].x - 100},
-      { 
-        duration: 180,
-	    callback: function(){
-          zoomable = true;
-          }
-      }
-      );
-	}
-  }
-  canvas.redraw();
-}
-
-function zoom(e) {
-  var delta;
-  var img;
-  img = displayObjects[0];
-  //Calculating the spin of the mousewheel
-  delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-    //Zooming in
-    if((delta == 1) && (zoomlevel<4) && (zoomable == true)){
-      zoomable = false;
-	  for(var j=0;j<objNum-6;j++){
-	    displayObjects[j].stop().animate(
-		{
-          height: displayObjects[j].height*zoomscale,
-          width: displayObjects[j].width*zoomscale,
-          x: canvas.mouse.x-zoomscale*(canvas.mouse.x-displayObjects[j].x),
-          y: canvas.mouse.y-zoomscale*(canvas.mouse.y-displayObjects[j].y)
-		},
+    //Zooming out with button
+    else if((zoom == -1) && (Island.zoomlevel>-1) && (Island.zoomable == true)){
+      Island.zoomable = false;
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate(
+        {
+          height: Math.round(Island.displayObjects[j].height/Island.zoomscale),
+          width: Math.round(Island.displayObjects[j].width/Island.zoomscale),
+          x: Island.canvas.width/2-(Island.canvas.width/2-Island.displayObjects[j].x)/Island.zoomscale,
+          y: Island.canvas.height/2-(Island.canvas.height/2-Island.displayObjects[j].y)/Island.zoomscale
+        },
         { 
           duration: 200,
-	      callback: function(){
-            zoomable = true;
-            }
+          callback: function(){
+            Island.zoomable = true;
+          }
+        });
+      }
+      Island.zoomlevel--;
+    }
+  },
+  
+  
+  pan: function(direction){
+    if(direction == 1){
+      Island.zoomable = false;
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate({
+          y: Island.displayObjects[j].y + 100
+        },
+        { 
+          duration: 180,
+          callback: function(){
+            Island.zoomable = true;
+          }
+        });
+      }
+    }
+    else if(direction == 2){
+      Island.zoomable = false;
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate({
+          y: Island.displayObjects[j].y - 100
+        },
+        { 
+          duration: 180,
+          callback: function(){
+            Island.zoomable = true;
+          }
+        });
+      }
+    }
+    else if(direction == 3){
+      Island.zoomable = false;
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate({
+          x: Island.displayObjects[j].x + 100
+        },
+        { 
+          duration: 180,
+          callback: function(){
+             Island.zoomable = true;
+          }
+        });
+      }
+    }
+    else if(direction == 4){
+      Island.zoomable = false;
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate({
+          x: Island.displayObjects[j].x - 100
+        },
+        { 
+          duration: 180,
+          callback: function(){
+            Island.zoomable = true;
+          }
+        });
+      }
+    }
+    Island.canvas.redraw();
+  },
+  
+  
+  zoom: function(e){
+    var delta;
+    var img;
+    img = Island.displayObjects[0];
+    //Calculating the spin of the mousewheel
+    delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+    //Zooming in
+    if((delta == 1) && (Island.zoomlevel<4) && (Island.zoomable == true)){
+      Island.zoomable = false;
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate(
+        {
+          height: Island.displayObjects[j].height*Island.zoomscale,
+          width: Island.displayObjects[j].width*Island.zoomscale,
+          x: Island.canvas.mouse.x-Island.zoomscale*(Island.canvas.mouse.x-Island.displayObjects[j].x),
+          y: Island.canvas.mouse.y-Island.zoomscale*(Island.canvas.mouse.y-Island.displayObjects[j].y)
+        },
+        { 
+          duration: 200,
+          callback: function(){
+            Island.zoomable = true;
+          }
         }
         );
-	  }
-      zoomlevel++;
-     } 
-     //Zooming out
-     else if((delta == -1) && (zoomlevel>-1) && (zoomable == true)){
-       zoomable = false;
-       for(var j=0;j<objNum-6;j++){
-	     displayObjects[j].stop().animate(
-		 {
-           height: Math.round(displayObjects[j].height/zoomscale),
-            width: Math.round(displayObjects[j].width/zoomscale),
-            x: canvas.mouse.x-(canvas.mouse.x-displayObjects[j].x)/zoomscale,
-            y: canvas.mouse.y-(canvas.mouse.y-displayObjects[j].y)/zoomscale
-		 },
-         { 
-           duration: 200,
-	       callback: function(){
-             zoomable = true;
-             }
-         }
-         );
-       }
-       zoomlevel--;
-     }
+      }
+      Island.zoomlevel++;
+    } 
+    //Zooming out
+    else if((delta == -1) && (Island.zoomlevel>-1) && (Island.zoomable == true)){
+      Island.zoomable = false;
+      for(var j=0;j<=Island.objNum;j++){
+        Island.displayObjects[j].stop().animate(
+        {
+          height: Math.round(Island.displayObjects[j].height/Island.zoomscale),
+          width: Math.round(Island.displayObjects[j].width/Island.zoomscale),
+          x: Island.canvas.mouse.x-(Island.canvas.mouse.x-Island.displayObjects[j].x)/Island.zoomscale,
+          y: Island.canvas.mouse.y-(Island.canvas.mouse.y-Island.displayObjects[j].y)/Island.zoomscale
+        },
+        { 
+          duration: 200,
+          callback: function(){
+            Island.zoomable = true;
+          }
+        }
+        );
+      }
+      Island.zoomlevel--;
+    }
+  },
+  renderPositions: function(data) {
+    console.log(data);
+    Island.ini(data);
+  }
 }

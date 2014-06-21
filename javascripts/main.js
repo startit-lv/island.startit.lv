@@ -1,12 +1,6 @@
-(function() {
-
+//(function() {
   window.Island = {};
-
-  Island.renderPositions = function(data) {
-    console.log(data);
-    ini(data);
-  };
-
+  
   var head; 
   var script;
   var script2;
@@ -22,5 +16,5 @@
     script = document.createElement('script');
     script.src = 'javascripts/example.jsonp?callback=Island.renderPositions';
     head.appendChild(script);
-  };
-})();
+  };  
+//});
