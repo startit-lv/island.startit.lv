@@ -16,7 +16,6 @@ Island = {
   
   
   ini: function(data){
-    //Need data parsin' here
     Island.posData = data;
     Island.objData = document.createElement('script');
     Island.objData.src = 'javascripts/displayObjects.jsonp?callback=loadObjData';
@@ -43,7 +42,6 @@ Island = {
     Island.canvas = oCanvas.create({
       canvas: "#island_canvas"
     });
-    //Creating and displaying all objects on canvas: maps, buttons etc.
     for(var i=0;i<Island.objNum;i++){
       Island.displayObjects[i] = Island.canvas.display.image({
         x: Island.imgData[i].x,
@@ -64,25 +62,6 @@ Island = {
     JScanvas = document.getElementById("island_canvas");
     JScanvas.addEventListener("mousewheel", Island.zoom, false);  
     JScanvas.addEventListener("DOMMouseScroll", Island.zoom, false);
-    //last six objects are always map buttons
-    /*Island.displayObjects[Island.objNum-6].bind("click tap", function(){
-      Island.pan(1);
-    });
-    Island.displayObjects[Island.objNum-5].bind("click tap", function(){
-      Island.pan(2);
-    });
-    Island.displayObjects[Island.objNum-4].bind("click tap", function(){
-      Island.pan(3);
-    });
-    Island.displayObjects[Island.objNum-3].bind("click tap", function(){
-      Island.pan(4);
-    });
-    Island.displayObjects[Island.objNum-2].bind("click tap", function(){
-      Island.zoombutton(1);
-    });
-    Island.displayObjects[Island.objNum-1].bind("click tap", function(){
-      Island.zoombutton(-1);
-    });*/
     
     //Moving the map with mouse
     for(var k=0;k<=Island.objNum;k++)

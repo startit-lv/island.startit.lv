@@ -1,6 +1,5 @@
 //(function() {
-  window.Island = {};
-  
+  window.Island = {};  
   var head; 
   var script;
   var script2;
