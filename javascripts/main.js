@@ -1,4 +1,4 @@
-//(function() {
+(function() {
   window.Island = {};  
   var head; 
   var script;
@@ -16,4 +16,4 @@
     script.src = 'javascripts/example.jsonp?callback=Island.renderPositions';
     head.appendChild(script);
   };  
-//});
+})();
